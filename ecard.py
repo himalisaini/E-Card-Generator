@@ -1,6 +1,7 @@
 from tkinter import *
 from PIL import Image, ImageTk, ImageSequence
 import time
+from PIL import ImageGrab
 
 #background gif
 class App:
@@ -22,163 +23,291 @@ class App:
 root = Tk()
 app = App(root)
 
+#Saving Image
+def getter(fname,widget,popup,window1):
+    popup.destroy()
+    time.sleep(5)
+    x=window1.winfo_rootx()+widget.winfo_x()
+    y=window1.winfo_rooty()+widget.winfo_y()
+    x1=x+widget.winfo_width()
+    y1=y+widget.winfo_height()
+    img=ImageGrab.grab().crop((x,y,x1,y1))
+    rgb_im = img.convert('RGB')
+    rgb_im.save(fname+'.png')
+    label = Label(widget, text="Your Card has been saved successfully please check the current directory !",font=("Comic Sans MS",20))
+    label.place(relx=0.25,rely=0.92)
+    
+ #Pop up box
+def popupmsg(canv,l1,popupMenu,popupMenu2,sv,window):
+    popup = Tk()
+    popup.wm_title("Save Ecard !")
+    popup.geometry("300x200")
+    l1.place_forget()
+    popupMenu2.destroy()
+    popupMenu.destroy()
+    sv.place_forget()
+    label = Label(popup, text="Enter the file name :",font=("Comic Sans MS",20))
+    label.pack(side="top", fill="x", pady=10)
+    txt = Entry(popup)
+    txt.insert(0,"*File Name*")
+    txt.place(relx=0.3,rely=0.3)
+    B1 = Button(popup, text="Okay", command = lambda: getter(txt.get(),canv,popup,window))
+    B1.place(relx=0.4,rely=0.6)
+    B1 = Button(popup, text="Cancel", command = popup.destroy)
+    B1.place(relx=0.6,rely=0.6)
+    popup.mainloop()
 
 
+#Birthday cards
+def birthday_def(name,txt,stat,imagename):
+    window1 = Toplevel(root)
+    window1.geometry("1400x1400")
+    window1.title("Birthday")
+    img1 = Image.open(imagename)
+    im1 = ImageTk.PhotoImage(img1)
+    c = Canvas(window1,width=1400, height=1400,bg='pink')
+    c.pack()
+    c.create_image(1200, 10, image=im1,anchor=NE)
+    tkvar = StringVar(window1)
+    tkvar2 = StringVar(window1)
+    
+    # Dictionary with options
+    choices = { 'Red','Blue','Green','Orange'}
+    tkvar.set('Red')
+    tkvar2.set('Blue') # set the default option
 
+    popupMenu = OptionMenu(window1, tkvar, *choices)
+    popupMenu2 = OptionMenu(window1, tkvar2, *choices)
+    l1 = Label(window1, text="Choose a color",font=("Comic Sans MS",15))
+    l1.place(relx=0.6,rely=0.375)
+    popupMenu.place(relx=0.669,rely=0.375)
+    popupMenu2.place(relx=0.669,rely=0.425)
 
-#Birthday Submenus
-def birthday1(name,txt):
-	window1 = Toplevel(root)
-        window1.geometry("1400x1400")
-        window1.title("Birthday")
-        img1 = Image.open('birthday1.jpg')
-        im1 = ImageTk.PhotoImage(img1)
-        c = Canvas(window1,width=1400, height=1400,bg='pink')
-        c.pack()
-        c.create_image(1200, 10, image=im1,anchor=NE)
-        tkvar = StringVar(root)
-        c1 = 'Red'
-        c2 = 'Blue'
-        # Dictionary with options
-        choices = { 'Red','Blue','Green','Orange'}
-        tkvar.set('Red') # set the default option
-
-        popupMenu = OptionMenu(window, tkvar, *choices)
-        Label(window, text="Choose a colo").grid(row = 1, column = 1)
-        popupMenu.grid(row = 2, column =1)
-
-        # on change dropdown value
-        def change_dropdown(*args):
-            print( tkvar.get() )
-            c1 = tkvar.get()
-
-        # link function to change dropdown
-        tkvar.trace('w', change_dropdown)
-        #c.create_text(700, 300, text=name,fill=c1,font=("Comic Sans MS",50))
-        canvas_text = c.create_text(700, 300, text='', anchor=NW,fill=c1,font=("Comic Sans MS",50))
+    def change_dropdown(*args):
+        x = tkvar.get()
+        canvas_text = c.create_text(635, 290, text='', anchor=NW,fill=x,font=("Comic Sans MS",50))
 
         test_string = name
         #Time delay between chars, in milliseconds
-        delta = 300
+        delta = 700
         delay = 0
         for i in range(len(test_string) + 1):
             s = test_string[:i]
             update_text = lambda s=s: c.itemconfigure(canvas_text, text=s)
             c.after(delay, update_text)
             delay += delta
-        c.create_text(700, 350, text=txt,fill=c2,font=("Comic Sans MS",40))
-        window1.mainloop()
-
-def birthday2(name,txt):
-	window1 = Toplevel(root)
-    	window1.geometry("1400x1400")
-    	window1.title("Birthday")
-    	img1 = Image.open('birthday2.jpg')
-    	im1 = ImageTk.PhotoImage(img1)
-	c = Canvas(window1,width=1400, height=1400,bg='pink')
-	c.pack()
-        c.create_image(1200, 10, image=im1,anchor=NE)
-        tkvar = StringVar(window1)
-        tkvar2 = StringVar(window1)
-        
-        # Dictionary with options
-        choices = { 'Red','Blue','Green','Orange'}
-        tkvar.set('Red')
-        tkvar2.set('Blue') # set the default option
-
-        popupMenu = OptionMenu(window1, tkvar, *choices)
-        popupMenu2 = OptionMenu(window1, tkvar2, *choices)
-        l1 = Label(window1, text="Choose a color",font=("Comic Sans MS",15))
-        l1.place(relx=0.6,rely=0.375)
-        popupMenu.place(relx=0.669,rely=0.375)
-        popupMenu2.place(relx=0.669,rely=0.425)
-
-        def change_dropdown(*args):
-            x = tkvar.get()
-            canvas_text = c.create_text(635, 290, text='', anchor=NW,fill=x,font=("Comic Sans MS",50))
-
-            test_string = name
-            #Time delay between chars, in milliseconds
-            delta = 700
-            delay = 0
-            for i in range(len(test_string) + 1):
-                s = test_string[:i]
-                update_text = lambda s=s: c.itemconfigure(canvas_text, text=s)
-                c.after(delay, update_text)
-                delay += delta
             
-        def change_dropdown2(*args):
-            x = tkvar2.get()
-            canvas_text = c.create_text(580, 370, text='', anchor=NW,fill=x,font=("Comic Sans MS",35))
-
-            test_string = txt
-            #Time delay between chars, in milliseconds
-            delta = 300
-            delay = 0
-            for i in range(len(test_string) + 1):
-                s = test_string[:i]
-                update_text = lambda s=s: c.itemconfigure(canvas_text, text=s)
-                c.after(delay, update_text)
-                delay += delta
+    def change_dropdown2(*args):
+        x = tkvar2.get()
+        j=0
+        if (stat == True):
+            canvas_text = c.create_text(580, 380, text=txt, anchor=NW,fill=x,font=("Comic Sans MS",30))
+        
+        else:
+            while(j<=(len(txt)-1)):
+                if j==0:
+                    canvas_text = c.create_text(480, 380, text=txt[0], anchor=NW,fill=x,font=("Comic Sans MS",30))
+                    j = j + 1
+                    if(j==len(txt)):
+                        break
+                if j==1:
+                    canvas_text = c.create_text(480, 425, text=txt[1], anchor=NW,fill=x,font=("Comic Sans MS",30))
+                    j = j + 1
+                    if(j==len(txt)):
+                        break
+                if j==2:
+                    canvas_text = c.create_text(480, 470, text=txt[2], anchor=NW,fill=x,font=("Comic Sans MS",30))
+                    j = j + 1
+                    if(j==len(txt)):
+                        break
+                if j==3:
+                    canvas_text = c.create_text(480, 505, text=txt[3], anchor=NW,fill=x,font=("Comic Sans MS",30))
+                    j = j + 1
+                    if(j==len(txt)):
+                        break
+                if j==4:
+                    canvas_text = c.create_text(480, 540, text=txt[4], anchor=NW,fill=x,font=("Comic Sans MS",30))
+                    j = j + 1
+                    if(j==len(txt)):
+                        break
         
 
-        tkvar.trace('w', change_dropdown)
-        tkvar2.trace('w', change_dropdown2)
+    tkvar.trace('w', change_dropdown)
+    tkvar2.trace('w', change_dropdown2)
     
-        canvas_text = c.create_text(635, 290, text='', anchor=NW,fill='Red',font=("Comic Sans MS",50))
+    j=0
+    if (stat == True):
+        canvas_text = c.create_text(580, 380, text=txt, anchor=NW,fill='Blue',font=("Comic Sans MS",30))
+    else:
+        while(j<=(len(txt)-1)):
+            if j==0:
+                canvas_text = c.create_text(480, 380, text=txt[0], anchor=NW,fill='Blue',font=("Comic Sans MS",30))
+                j = j + 1
+                if(j==len(txt)):
+                    break
+            if j==1:
+                canvas_text = c.create_text(480, 425, text=txt[1], anchor=NW,fill='Blue',font=("Comic Sans MS",30))
+                j = j + 1
+                if(j==len(txt)):
+                    break
+            if j==2:
+                canvas_text = c.create_text(480, 470, text=txt[2], anchor=NW,fill='Blue',font=("Comic Sans MS",30))
+                j = j + 1
+                if(j==len(txt)):
+                    break
+            if j==3:
+                canvas_text = c.create_text(480, 505, text=txt[3], anchor=NW,fill='Blue',font=("Comic Sans MS",30))
+                j = j + 1
+                if(j==len(txt)):
+                    break
+            if j==4:
+                canvas_text = c.create_text(480, 540, text=txt[4], anchor=NW,fill='Blue',font=("Comic Sans MS",30))
+                j = j + 1
+                if(j==len(txt)):
+                    break
+    
+    canvas_text = c.create_text(635, 290, text='', anchor=NW,fill='Red',font=("Comic Sans MS",50))
+
+    test_string = name
+        #Time delay between chars, in milliseconds
+    delta = 300
+    delay = 0
+    for i in range(len(test_string) + 1):
+        s = test_string[:i]
+        update_text = lambda s=s: c.itemconfigure(canvas_text, text=s)
+        c.after(delay, update_text)
+        delay += delta
+        
+    sv = Button(window1,text="SAVE",font=("Comic Sans MS",30),command=lambda :popupmsg(c,l1,popupMenu,popupMenu2,sv,window1))
+    sv.place(relx=0.5,rely=0.9)
+    window1.mainloop()
+
+#Anniversary cards
+def anniversary_def(name,txt,stat,imagename):
+    window1 = Toplevel(root)
+    window1.geometry("1400x1400")
+    window1.title("Birthday")
+    img1 = Image.open(imagename)
+    im1 = ImageTk.PhotoImage(img1)
+    c = Canvas(window1,width=1400, height=1400,bg='pink')
+    c.pack()
+    c.create_image(1200, 10, image=im1,anchor=NE)
+    tkvar = StringVar(window1)
+    tkvar2 = StringVar(window1)
+    
+    # Dictionary with options
+    choices = { 'Red','Blue','Green','Orange'}
+    tkvar.set('Red')
+    tkvar2.set('Blue') # set the default option
+
+    popupMenu = OptionMenu(window1, tkvar, *choices)
+    popupMenu2 = OptionMenu(window1, tkvar2, *choices)
+    l1 = Label(window1, text="Choose a color",font=("Comic Sans MS",15))
+    l1.place(relx=0.6,rely=0.375)
+    popupMenu.place(relx=0.669,rely=0.375)
+    popupMenu2.place(relx=0.669,rely=0.425)
+
+    def change_dropdown(*args):
+        x = tkvar.get()
+        canvas_text = c.create_text(635, 290, text='', anchor=NW,fill=x,font=("Comic Sans MS",50))
 
         test_string = name
         #Time delay between chars, in milliseconds
-        delta = 300
+        delta = 700
         delay = 0
         for i in range(len(test_string) + 1):
             s = test_string[:i]
             update_text = lambda s=s: c.itemconfigure(canvas_text, text=s)
             c.after(delay, update_text)
             delay += delta
+            
+    def change_dropdown2(*args):
+        x = tkvar2.get()
+        j=0
+        if (stat == True):
+            canvas_text = c.create_text(580, 380, text=txt, anchor=NW,fill=x,font=("Comic Sans MS",30))
         
-        canvas_text2 = c.create_text(580,370, text='', anchor=NW,fill='Blue',font=("Comic Sans MS",35))
+        else:
+            while(j<=(len(txt)-1)):
+                if j==0:
+                    canvas_text = c.create_text(480, 380, text=txt[0], anchor=NW,fill=x,font=("Comic Sans MS",30))
+                    j = j + 1
+                    if(j==len(txt)):
+                        break
+                if j==1:
+                    canvas_text = c.create_text(480, 425, text=txt[1], anchor=NW,fill=x,font=("Comic Sans MS",30))
+                    j = j + 1
+                    if(j==len(txt)):
+                        break
+                if j==2:
+                    canvas_text = c.create_text(480, 470, text=txt[2], anchor=NW,fill=x,font=("Comic Sans MS",30))
+                    j = j + 1
+                    if(j==len(txt)):
+                        break
+                if j==3:
+                    canvas_text = c.create_text(480, 505, text=txt[3], anchor=NW,fill=x,font=("Comic Sans MS",30))
+                    j = j + 1
+                    if(j==len(txt)):
+                        break
+                if j==4:
+                    canvas_text = c.create_text(480, 540, text=txt[4], anchor=NW,fill=x,font=("Comic Sans MS",30))
+                    j = j + 1
+                    if(j==len(txt)):
+                        break
+        
 
-        test_string2 = txt
+    tkvar.trace('w', change_dropdown)
+    tkvar2.trace('w', change_dropdown2)
+    
+    j=0
+    if (stat == True):
+        canvas_text = c.create_text(580, 380, text=txt, anchor=NW,fill='Blue',font=("Comic Sans MS",30))
+    else:
+        while(j<=(len(txt)-1)):
+            if j==0:
+                canvas_text = c.create_text(480, 380, text=txt[0], anchor=NW,fill='Blue',font=("Comic Sans MS",30))
+                j = j + 1
+                if(j==len(txt)):
+                    break
+            if j==1:
+                canvas_text = c.create_text(480, 425, text=txt[1], anchor=NW,fill='Blue',font=("Comic Sans MS",30))
+                j = j + 1
+                if(j==len(txt)):
+                    break
+            if j==2:
+                canvas_text = c.create_text(480, 470, text=txt[2], anchor=NW,fill='Blue',font=("Comic Sans MS",30))
+                j = j + 1
+                if(j==len(txt)):
+                    break
+            if j==3:
+                canvas_text = c.create_text(480, 505, text=txt[3], anchor=NW,fill='Blue',font=("Comic Sans MS",30))
+                j = j + 1
+                if(j==len(txt)):
+                    break
+            if j==4:
+                canvas_text = c.create_text(480, 540, text=txt[4], anchor=NW,fill='Blue',font=("Comic Sans MS",30))
+                j = j + 1
+                if(j==len(txt)):
+                    break
+    
+    canvas_text = c.create_text(635, 290, text='', anchor=NW,fill='Red',font=("Comic Sans MS",50))
+
+    test_string = name
         #Time delay between chars, in milliseconds
-        delta2 = 300
-        delay2 = 0
-        for i in range(len(test_string2) + 1):
-            s2 = test_string2[:i]
-            update_text2 = lambda s2=s2: c.itemconfigure(canvas_text2, text=s2)
-            c.after(delay2, update_text2)
-            delay2 += delta2
+    delta = 300
+    delay = 0
+    for i in range(len(test_string) + 1):
+        s = test_string[:i]
+        update_text = lambda s=s: c.itemconfigure(canvas_text, text=s)
+        c.after(delay, update_text)
+        delay += delta
         
-        
-        def save():
-            l1.place_forget()
-            popupMenu2.destroy()
-            popupMenu.destroy()
-            sv.place_forget()
-        
-        sv = Button(window1,text="SAVE",command=lambda :save())
-        sv.place(relx=0.45,rely=0.8)
-	window1.mainloop()
+    sv = Button(window1,text="SAVE",font=("Comic Sans MS",30),command=lambda :popupmsg(c,l1,popupMenu,popupMenu2,sv,window1))
+    sv.place(relx=0.5,rely=0.9)
+    window1.mainloop()
 
-def birthday3(name,txt):
-	window1 = Toplevel(root)
-        window1.geometry("1400x1400")
-        window1.title("Birthday")
-        img1 = Image.open('birthday3.jpg')
-        im1 = ImageTk.PhotoImage(img1)
-        c = Canvas(window1,width=1400, height=1400,bg='pink')
-        c.pack()
-        c.create_image(1200, 10, image=im1,anchor=NE)
-        c.create_text(700, 300, text=name,fill=c1,font=("Comic Sans MS",50))
-        c.create_text(700, 350, text=txt,fill=c2,font=("Comic Sans MS",40))
-    
- 
-	window1.mainloop()
-
-
-    
-#Birthday Main Menu
-def birthday():
+#Anniversary Main Menu
+def anniversary(subim1,subim2,subim3,imgname1,imgname2,imgname3):
     window = Toplevel(root)
     window.geometry("1400x1400")
     window.title("Birthday")
@@ -187,11 +316,11 @@ def birthday():
     heading = Label(window,text="Choose a template :",fg="white",bg="#ff6666",font=("Comic Sans MS", 30))
     heading.place(relx = 0.45,rely =0.05)
 
-    img1 = Image.open('birth1.jpg')
+    img1 = Image.open(subim1)
     im1 = ImageTk.PhotoImage(img1)
-    img2 = Image.open('birth2.jpg')
+    img2 = Image.open(subim2)
     im2 = ImageTk.PhotoImage(img2)
-    img3 = Image.open('birth3.jpg')
+    img3 = Image.open(subim3)
     im3 = ImageTk.PhotoImage(img3)
     
     def details(x):
@@ -204,8 +333,8 @@ def birthday():
         h1 = Label(window,text="Step 1 : Enter the name ",fg="white",bg="#ff6666",font=("Comic Sans MS", 30))
         h1.place(relx = 0.4,rely =0.4)
         display = Entry(window)
-        display.insert(0,"*Himali*")
-        display.place(relx=0.4,rely=0.5)
+        display.insert(0,"*Name*")
+        display.place(relx=0.47,rely=0.5)
         
         
         
@@ -213,29 +342,190 @@ def birthday():
         h1.place(relx = 0.4,rely =0.65)
         display2 = Entry(window)
         display2.insert(0,"*Sample Text Message*")
-        display2.place(relx=0.4,rely=0.75)
-        
-        name = display.get()
-        txt = display2.get()
-        
-        
+        display2.place(relx=0.47,rely=0.75)
         
         if x==1:
             pic1 = Button(window,image=im1)
             pic1.place(relx=0.4,rely=0.05,relheight=0.25,relwidth=0.25)
-            save = Button(window,text="Generate Ecard",fg="pink",bg="blue",font=("Comic Sans MS",20),command=lambda : birthday1(name,txt))
-            save.place(relx=0.45,rely=0.9)
+            
         elif x==2:
             pic2 = Button(window,image=im2)
             pic2.place(relx=0.4,rely=0.05,relheight=0.25,relwidth=0.25)
-            save = Button(window,text="Generate Ecard",fg="pink",bg="blue",font=("Comic Sans MS",20),command=lambda : birthday2(name,txt))
-            save.place(relx=0.45,rely=0.9)
             
         else:
             pic3 = Button(window,image=im3)
             pic3.place(relx=0.4,rely=0.05,relheight=0.25,relwidth=0.25)
-            save = Button(window,text="Generate Ecard",fg="pink",bg="blue",font=("Comic Sans MS",20),command=lambda : birthday3(name,txt))
-            save.place(relx=0.45,rely=0.9)
+            
+        
+        def name_func(x):
+            name = display.get()
+            
+            txt = display2.get()
+            res = txt.split()
+            
+
+            c = 1
+            set = []
+            word =''
+            
+            if len(res)<9:
+                set = txt
+                stat = True
+            else:
+                stat = False
+                for i in res:
+                    if(c%9 !=0):
+                        word = word +" "+ i
+                        c = c + 1
+
+                    if(c%9 == 0):
+                        set.append(word)
+                        word = ''
+                        c = c + 1
+            
+           
+            if x==1:
+                save = Button(window,text="Generate Ecard",font=("Comic Sans MS",20),command=lambda : birthday_def(name,set,stat,imgname1))
+                save.place(relx=0.47,rely=0.9)
+            elif x==2:
+                
+                save = Button(window,text="Generate Ecard",font=("Comic Sans MS",20),command=lambda : birthday_def(name,set,stat,imgname2))
+                save.place(relx=0.47,rely=0.9)
+                
+            else:
+                
+                save = Button(window,text="Generate Ecard",font=("Comic Sans MS",20),command=lambda : birthday_def(name,set,stat,imgname3))
+                save.place(relx=0.47,rely=0.9)
+            
+        
+            
+        
+        but1 = Button(window,text="Done",font=("Comic Sans MS",15),command=lambda : name_func(x))
+        but1.place(relx=0.51,rely=0.84)
+        
+        
+        
+        
+        
+        
+
+        
+    t1 = Button(window,image=im1,command=lambda : details(1))
+    t1.place(relx=0.1,rely=0.2,relheight=0.25,relwidth=0.25)
+    t2 = Button(window,image=im2,command=lambda : details(2))
+    t2.place(relx=0.4,rely=0.4,relheight=0.25,relwidth=0.25)
+    t3 = Button(window,image=im3,command=lambda : details(3))
+    t3.place(relx=0.7,rely=0.6,relheight=0.25,relwidth=0.25)
+
+    
+        
+    window.mainloop()
+
+#End of Anniversary
+
+
+
+#Birthday Main Menu
+def birthday(subim1,subim2,subim3,imgname1,imgname2,imgname3):
+    window = Toplevel(root)
+    window.geometry("1400x1400")
+    window.title("Birthday")
+    lab = Label(window,bg="#ff6666")
+    lab.place(relwidth=1,relheight=1)
+    heading = Label(window,text="Choose a template :",fg="white",bg="#ff6666",font=("Comic Sans MS", 30))
+    heading.place(relx = 0.45,rely =0.05)
+
+    img1 = Image.open(subim1)
+    im1 = ImageTk.PhotoImage(img1)
+    img2 = Image.open(subim2)
+    im2 = ImageTk.PhotoImage(img2)
+    img3 = Image.open(subim3)
+    im3 = ImageTk.PhotoImage(img3)
+    
+    def details(x):
+        t1.place_forget()
+        t2.place_forget()
+        t3.place_forget()
+        heading.place_forget()
+        
+        
+        h1 = Label(window,text="Step 1 : Enter the name ",fg="white",bg="#ff6666",font=("Comic Sans MS", 30))
+        h1.place(relx = 0.4,rely =0.4)
+        display = Entry(window)
+        display.insert(0,"*Name*")
+        display.place(relx=0.47,rely=0.5)
+        
+        
+        
+        h1 = Label(window,text="Step 2 : Enter the message ",fg="white",bg="#ff6666",font=("Comic Sans MS", 30))
+        h1.place(relx = 0.4,rely =0.65)
+        display2 = Entry(window)
+        display2.insert(0,"*Sample Text Message*")
+        display2.place(relx=0.47,rely=0.75)
+        
+        if x==1:
+            pic1 = Button(window,image=im1)
+            pic1.place(relx=0.4,rely=0.05,relheight=0.25,relwidth=0.25)
+            
+        elif x==2:
+            pic2 = Button(window,image=im2)
+            pic2.place(relx=0.4,rely=0.05,relheight=0.25,relwidth=0.25)
+            
+        else:
+            pic3 = Button(window,image=im3)
+            pic3.place(relx=0.4,rely=0.05,relheight=0.25,relwidth=0.25)
+            
+        
+        def name_func(x):
+            name = display.get()
+            
+            txt = display2.get()
+            res = txt.split()
+            
+
+            c = 1
+            set = []
+            word =''
+            
+            if len(res)<9:
+                set = txt
+                stat = True
+            else:
+                stat = False
+                for i in res:
+                    if(c%9 !=0):
+                        word = word +" "+ i
+                        c = c + 1
+
+                    if(c%9 == 0):
+                        set.append(word)
+                        word = ''
+                        c = c + 1
+            
+           
+            if x==1:
+                save = Button(window,text="Generate Ecard",font=("Comic Sans MS",20),command=lambda : birthday_def(name,set,stat,imgname1))
+                save.place(relx=0.47,rely=0.9)
+            elif x==2:
+                
+                save = Button(window,text="Generate Ecard",font=("Comic Sans MS",20),command=lambda : birthday_def(name,set,stat,imgname2))
+                save.place(relx=0.47,rely=0.9)
+                
+            else:
+                
+                save = Button(window,text="Generate Ecard",font=("Comic Sans MS",20),command=lambda : birthday_def(name,set,stat,imgname3))
+                save.place(relx=0.47,rely=0.9)
+            
+        
+            
+        
+        but1 = Button(window,text="Done",font=("Comic Sans MS",15),command=lambda : name_func(x))
+        but1.place(relx=0.51,rely=0.84)
+        
+        
+        
+        
+        
         
 
         
@@ -263,12 +553,11 @@ def start():
 
 #buttons for selecting category
 
-    Button(frame2,text="Birthday",fg="pink",bg="blue",font=("Comic Sans MS",20), command=lambda : birthday()).place(relx=0.2,rely=0.7)
-    Button(frame2,text="Anniversary",fg="pink",bg="blue",font=("Comic Sans MS",20), command=lambda : birthday()).place(relx=0.5,rely=0.7)
-    Button(frame2,text="Diwali",fg="pink",bg="blue",font=("Comic Sans MS",20), command=lambda : birthday()).place(relx=0.8,rely=0.7)
-    Button(frame2,text="Christmas",fg="pink",bg="blue",font=("Comic Sans MS",20), command=lambda : birthday()).place(relx=0.2,rely=0.85)
-    Button(frame2,text="New Year",fg="pink",bg="blue",font=("Comic Sans MS",20), command=lambda : birthday()).place(relx=0.5,rely=0.85)
-    Button(frame2,text="Friendship Day",fg="pink",bg="blue",font=("Comic Sans MS",20), command=lambda : birthday()).place(relx=0.8,rely=0.85)
+    Button(frame2,text="Birthday",fg="pink",bg="blue",font=("Comic Sans MS",20), command=lambda : birthday('birth1.jpg','birth2.jpg','birth3.jpg','birthday1.jpg','birthday2.jpg','birthday3.jpg')).place(relx=0.3,rely=0.75)
+    Button(frame2,text="Anniversary",fg="pink",bg="blue",font=("Comic Sans MS",20), command=lambda : anniversary('ann1.jpg','ann2.jpg','ann3.jpg','anniversary1.jpg','anniversary2.jpg','anniversary3.jpg')).place(relx=0.65,rely=0.75)
+    Button(frame2,text="Diwali",fg="pink",bg="blue",font=("Comic Sans MS",20), command=lambda : birthday('di1.jpg','di2.jpg','di3.jpg','diwali1.jpg','diwali2.jpg','diwali3.jpg')).place(relx=0.3,rely=0.9)
+    Button(frame2,text="New Year",fg="pink",bg="blue",font=("Comic Sans MS",20), command=lambda : birthday('hny1.jpg','hny2.jpg','hny3.jpg','newyear1.jpg','newyear2.jpg','newyear3.jpg')).place(relx=0.65,rely=0.9)
+    
     
     
 #heading frame
@@ -298,3 +587,4 @@ Button(frame2,text="Click here to start!",fg="pink",bg="blue",font=("Comic Sans 
 
 
 root.mainloop()
+
