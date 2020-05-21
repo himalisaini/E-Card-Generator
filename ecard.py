@@ -11,7 +11,7 @@ class App:
         self.canvas.pack()
         self.sequence = [ImageTk.PhotoImage(img)
                             for img in ImageSequence.Iterator(
-                                    Image.open('bggif.gif'))]
+                                    Image.open('images/bggif.gif'))]
         self.image = self.canvas.create_image(700,500, image=self.sequence[0])
         self.animate(1)
     def animate(self, counter):
@@ -21,6 +21,7 @@ class App:
 
     
 root = Tk()
+root.title('E-Card Generator')
 app = App(root)
 
 #Saving Image
@@ -59,11 +60,11 @@ def popupmsg(canv,l1,popupMenu,popupMenu2,sv,window):
 
 
 #Birthday cards
-def birthday_def(name,txt,stat,imagename):
+def birthday_def(name,txt,stat,imagename,title_name):
     window1 = Toplevel(root)
     window1.geometry("1400x1400")
-    window1.title("Birthday")
-    img1 = Image.open(imagename)
+    window1.title(title_name)
+    img1 = Image.open('images/'+imagename)
     im1 = ImageTk.PhotoImage(img1)
     c = Canvas(window1,width=1400, height=1400,bg='pink')
     c.pack()
@@ -183,11 +184,11 @@ def birthday_def(name,txt,stat,imagename):
     window1.mainloop()
 
 #Anniversary cards
-def anniversary_def(name,txt,stat,imagename):
+def anniversary_def(name,txt,stat,imagename,title_name):
     window1 = Toplevel(root)
     window1.geometry("1400x1400")
-    window1.title("Birthday")
-    img1 = Image.open(imagename)
+    window1.title(title_name)
+    img1 = Image.open('images/'+imagename)
     im1 = ImageTk.PhotoImage(img1)
     c = Canvas(window1,width=1400, height=1400,bg='pink')
     c.pack()
@@ -203,13 +204,13 @@ def anniversary_def(name,txt,stat,imagename):
     popupMenu = OptionMenu(window1, tkvar, *choices)
     popupMenu2 = OptionMenu(window1, tkvar2, *choices)
     l1 = Label(window1, text="Choose a color",font=("Comic Sans MS",15))
-    l1.place(relx=0.6,rely=0.375)
-    popupMenu.place(relx=0.669,rely=0.375)
-    popupMenu2.place(relx=0.669,rely=0.425)
+    l1.place(relx=0.75,rely=0.31)
+    popupMenu.place(relx=0.75,rely=0.42)
+    popupMenu2.place(relx=0.75,rely=0.53)
 
     def change_dropdown(*args):
         x = tkvar.get()
-        canvas_text = c.create_text(635, 290, text='', anchor=NW,fill=x,font=("Comic Sans MS",50))
+        canvas_text = c.create_text(875, 290, text='', anchor=NW,fill=x,font=("Comic Sans MS",50))
 
         test_string = name
         #Time delay between chars, in milliseconds
@@ -225,7 +226,7 @@ def anniversary_def(name,txt,stat,imagename):
         x = tkvar2.get()
         j=0
         if (stat == True):
-            canvas_text = c.create_text(580, 380, text=txt, anchor=NW,fill=x,font=("Comic Sans MS",30))
+            canvas_text = c.create_text(860, 380, text=txt, anchor=NW,fill=x,font=("Comic Sans MS",30))
         
         else:
             while(j<=(len(txt)-1)):
@@ -261,7 +262,7 @@ def anniversary_def(name,txt,stat,imagename):
     
     j=0
     if (stat == True):
-        canvas_text = c.create_text(580, 380, text=txt, anchor=NW,fill='Blue',font=("Comic Sans MS",30))
+        canvas_text = c.create_text(860, 380, text=txt, anchor=NW,fill='Blue',font=("Comic Sans MS",30))
     else:
         while(j<=(len(txt)-1)):
             if j==0:
@@ -290,7 +291,7 @@ def anniversary_def(name,txt,stat,imagename):
                 if(j==len(txt)):
                     break
     
-    canvas_text = c.create_text(635, 290, text='', anchor=NW,fill='Red',font=("Comic Sans MS",50))
+    canvas_text = c.create_text(875,290, text='', anchor=NW,fill='Red',font=("Comic Sans MS",50))
 
     test_string = name
         #Time delay between chars, in milliseconds
@@ -307,20 +308,20 @@ def anniversary_def(name,txt,stat,imagename):
     window1.mainloop()
 
 #Anniversary Main Menu
-def anniversary(subim1,subim2,subim3,imgname1,imgname2,imgname3):
+def anniversary(subim1,subim2,subim3,imgname1,imgname2,imgname3,title_name):
     window = Toplevel(root)
     window.geometry("1400x1400")
-    window.title("Birthday")
+    window.title(title_name)
     lab = Label(window,bg="#ff6666")
     lab.place(relwidth=1,relheight=1)
     heading = Label(window,text="Choose a template :",fg="white",bg="#ff6666",font=("Comic Sans MS", 30))
     heading.place(relx = 0.45,rely =0.05)
 
-    img1 = Image.open(subim1)
+    img1 = Image.open('images/'+subim1)
     im1 = ImageTk.PhotoImage(img1)
-    img2 = Image.open(subim2)
+    img2 = Image.open('images/'+subim2)
     im2 = ImageTk.PhotoImage(img2)
-    img3 = Image.open(subim3)
+    img3 = Image.open('images/'+subim3)
     im3 = ImageTk.PhotoImage(img3)
     
     def details(x):
@@ -385,16 +386,16 @@ def anniversary(subim1,subim2,subim3,imgname1,imgname2,imgname3):
             
            
             if x==1:
-                save = Button(window,text="Generate Ecard",font=("Comic Sans MS",20),command=lambda : birthday_def(name,set,stat,imgname1))
+                save = Button(window,text="Generate Ecard",font=("Comic Sans MS",20),command=lambda : anniversary_def(name,set,stat,imgname1,title_name))
                 save.place(relx=0.47,rely=0.9)
             elif x==2:
                 
-                save = Button(window,text="Generate Ecard",font=("Comic Sans MS",20),command=lambda : birthday_def(name,set,stat,imgname2))
+                save = Button(window,text="Generate Ecard",font=("Comic Sans MS",20),command=lambda : anniversary_def(name,set,stat,imgname2,title_name))
                 save.place(relx=0.47,rely=0.9)
                 
             else:
                 
-                save = Button(window,text="Generate Ecard",font=("Comic Sans MS",20),command=lambda : birthday_def(name,set,stat,imgname3))
+                save = Button(window,text="Generate Ecard",font=("Comic Sans MS",20),command=lambda : anniversary_def(name,set,stat,imgname3,title_name))
                 save.place(relx=0.47,rely=0.9)
             
         
@@ -426,20 +427,20 @@ def anniversary(subim1,subim2,subim3,imgname1,imgname2,imgname3):
 
 
 #Birthday Main Menu
-def birthday(subim1,subim2,subim3,imgname1,imgname2,imgname3):
+def birthday(subim1,subim2,subim3,imgname1,imgname2,imgname3,title_name):
     window = Toplevel(root)
     window.geometry("1400x1400")
-    window.title("Birthday")
+    window.title(title_name)
     lab = Label(window,bg="#ff6666")
     lab.place(relwidth=1,relheight=1)
     heading = Label(window,text="Choose a template :",fg="white",bg="#ff6666",font=("Comic Sans MS", 30))
     heading.place(relx = 0.45,rely =0.05)
 
-    img1 = Image.open(subim1)
+    img1 = Image.open('images/'+subim1)
     im1 = ImageTk.PhotoImage(img1)
-    img2 = Image.open(subim2)
+    img2 = Image.open('images/'+subim2)
     im2 = ImageTk.PhotoImage(img2)
-    img3 = Image.open(subim3)
+    img3 = Image.open('images/'+subim3)
     im3 = ImageTk.PhotoImage(img3)
     
     def details(x):
@@ -504,16 +505,16 @@ def birthday(subim1,subim2,subim3,imgname1,imgname2,imgname3):
             
            
             if x==1:
-                save = Button(window,text="Generate Ecard",font=("Comic Sans MS",20),command=lambda : birthday_def(name,set,stat,imgname1))
+                save = Button(window,text="Generate Ecard",font=("Comic Sans MS",20),command=lambda : birthday_def(name,set,stat,imgname1,title_name))
                 save.place(relx=0.47,rely=0.9)
             elif x==2:
                 
-                save = Button(window,text="Generate Ecard",font=("Comic Sans MS",20),command=lambda : birthday_def(name,set,stat,imgname2))
+                save = Button(window,text="Generate Ecard",font=("Comic Sans MS",20),command=lambda : birthday_def(name,set,stat,imgname2,title_name))
                 save.place(relx=0.47,rely=0.9)
                 
             else:
                 
-                save = Button(window,text="Generate Ecard",font=("Comic Sans MS",20),command=lambda : birthday_def(name,set,stat,imgname3))
+                save = Button(window,text="Generate Ecard",font=("Comic Sans MS",20),command=lambda : birthday_def(name,set,stat,imgname3,title_name))
                 save.place(relx=0.47,rely=0.9)
             
         
@@ -553,10 +554,10 @@ def start():
 
 #buttons for selecting category
 
-    Button(frame2,text="Birthday",fg="pink",bg="blue",font=("Comic Sans MS",20), command=lambda : birthday('birth1.jpg','birth2.jpg','birth3.jpg','birthday1.jpg','birthday2.jpg','birthday3.jpg')).place(relx=0.3,rely=0.75)
-    Button(frame2,text="Anniversary",fg="pink",bg="blue",font=("Comic Sans MS",20), command=lambda : anniversary('ann1.jpg','ann2.jpg','ann3.jpg','anniversary1.jpg','anniversary2.jpg','anniversary3.jpg')).place(relx=0.65,rely=0.75)
-    Button(frame2,text="Diwali",fg="pink",bg="blue",font=("Comic Sans MS",20), command=lambda : birthday('di1.jpg','di2.jpg','di3.jpg','diwali1.jpg','diwali2.jpg','diwali3.jpg')).place(relx=0.3,rely=0.9)
-    Button(frame2,text="New Year",fg="pink",bg="blue",font=("Comic Sans MS",20), command=lambda : birthday('hny1.jpg','hny2.jpg','hny3.jpg','newyear1.jpg','newyear2.jpg','newyear3.jpg')).place(relx=0.65,rely=0.9)
+    Button(frame2,text="Birthday",fg="pink",bg="blue",font=("Comic Sans MS",20), command=lambda : birthday('birth1.jpg','birth2.jpg','birth3.jpg','birthday1.jpg','birthday2.jpg','birthday3.jpg','Birthday')).place(relx=0.3,rely=0.75)
+    Button(frame2,text="Anniversary",fg="pink",bg="blue",font=("Comic Sans MS",20), command=lambda : anniversary('ann1.jpg','ann2.jpg','ann3.jpg','anniversary1.jpg','anniversary2.jpg','anniversary3.jpg','Anniversary')).place(relx=0.65,rely=0.75)
+    Button(frame2,text="Diwali",fg="pink",bg="blue",font=("Comic Sans MS",20), command=lambda : birthday('di1.jpg','di2.jpg','di3.jpg','diwali1.jpg','diwali2.jpg','diwali3.jpg','Diwali')).place(relx=0.3,rely=0.9)
+    Button(frame2,text="New Year",fg="pink",bg="blue",font=("Comic Sans MS",20), command=lambda : birthday('hny1.jpg','hny2.jpg','hny3.jpg','newyear1.jpg','newyear2.jpg','newyear3.jpg','New Year')).place(relx=0.65,rely=0.9)
     
     
     
